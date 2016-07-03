@@ -82,7 +82,7 @@
 
 - name: "install nginx host file"
   template:
-    src: "realms-wiki.json.j2"
+    src: "nginx-realms.conf.j2"
     dest: "/etc/nginx/conf.d/realms.conf"
     owner: "root"
     group: "root"
