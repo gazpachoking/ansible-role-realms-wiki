@@ -13,48 +13,47 @@
     - libssl-dev
     - libsasl2-dev
     - libldap2-dev
+    - python-pip
+    - python-virtualenv
+  become: yes
 
 - name: "create realms user"
   user:
     name: "realms"
     home: "/home/realms"
-
-- name: "create /home/realms/realms-wiki directory"
-  file:
-    dest: "/home/realms/realms-wiki"
-    owner: "realms"
-    group: "realms"
-    mode: "0755"
-    state: "directory"
-    seuser: "staff_u"
-    serole: "object_r"
-    setype: "httpd_sys_content_t"
-    selevel: "s0"
+  become: yes
 
 - name: "https://github.com/scragg0x/realms-wiki.git"
   git:
     repo: "https://github.com/scragg0x/realms-wiki.git"
-    dest: "/home/realms/realms-wiki"
+    dest: "{{ realms_path }}"
     version: "{{ realms_version }}"
     update: True
     force: False
-  sudo_user: "realms"
+  become: yes
+  become_user: realms
 #  notify:
 #    - "reload discourse-unicorn"
 
+- name: Install bower globally.
+  npm: name=bower global=yes
+  become: yes
+
 - name: "bower install"
-  bower: path=/home/realms/realms-app
-  sudo_user: "realms"
+  bower: path={{ realms_path }}
+  become: yes
+  become_user: realms
 
 - name: Install realms in virtualenv
   pip:
-    chdir: /home/realms/realms-wiki
+    chdir: "{{ realms_path }}"
     name: .
     editable: True
 
     virtualenv: /home/realms/venv
     virtualenv_python: python2.7
-  sudo_user: "realms"
+  become: yes
+  become_user: realms
 
 - name: "install realms-wiki.json"
   template:
@@ -63,6 +62,8 @@
     owner: "realms"
     group: "realms"
     mode: "0644"
+  become: yes
+  become_user: realms
 
 - name: clone wiki repository
   when: realms_wiki_repo
@@ -71,8 +72,19 @@
     dest: "{{ realms_wiki_path }}"
     update: no
     force: no
-  sudo_user: "realms"
+  become: yes
+  become_user: realms
 
 - name: start realms wiki
   command: /home/realms/venv/bin/realms-wiki restart
-  sudo_user: "realms"
+  become: yes
+  become_user: realms
+
+- name: "install nginx host file"
+  template:
+    src: "realms-wiki.json.j2"
+    dest: "/etc/nginx/conf.d/realms.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  become: yes

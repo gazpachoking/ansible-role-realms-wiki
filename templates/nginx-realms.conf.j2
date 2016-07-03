@@ -1,0 +1,20 @@
+server {
+  listen 5001;
+
+  # Your domain here
+  server_name wiki.example.org;
+
+  # Settings to by-pass for static files
+  location ^~ /static/  {
+    root {{realms_path}};
+  }
+
+  location / {
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+
+    proxy_pass http://127.0.0.1:{{realms_cofig.PORT|d(5000)}}/;
+    proxy_redirect off;
+  }
+}

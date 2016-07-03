@@ -1,5 +1,6 @@
 ---
 realms_version: master
+realms_path: /home/realms/realms-wiki
 realms_wiki_path: /home/realms/wiki-data
 realms_wiki_repo:
 # This accepts any realms config options
