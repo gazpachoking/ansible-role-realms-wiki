@@ -72,6 +72,7 @@
     dest: "{{ realms_wiki_path }}"
     update: no
     force: no
+    version: "{{realms_wiki_repo_version|d('master'}}"
   become: yes
   become_user: realms
 

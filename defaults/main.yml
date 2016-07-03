@@ -3,6 +3,7 @@ realms_version: master
 realms_path: /home/realms/realms-wiki
 realms_wiki_path: /home/realms/wiki-data
 realms_wiki_repo:
+realms_wiki_repo_version:
 # This accepts any realms config options
 realms_config:
   HOST: "0.0.0.0"
