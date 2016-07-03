@@ -6,9 +6,3 @@ galaxy_info:
   license: MIT
   min_ansible_version: 1.8.4
   platforms: [Ubuntu]
-include_when: {}
-maintenance_complement: Optional. Indicate additional maintenance instructions.
-usage_complement: Optional. Indicate additional usage instructions.
-variables: {}
-version: 0.0.1
-prefix: realms
